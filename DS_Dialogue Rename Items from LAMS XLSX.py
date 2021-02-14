@@ -1,4 +1,4 @@
-# ReaScript Name: Rename Items from LAMS XLS
+# ReaScript Name: Rename Items from LAMS XLSX
 # Author: Dedrick Sarzaba
 # REAPER: 6.23
 # Version: 1.0
