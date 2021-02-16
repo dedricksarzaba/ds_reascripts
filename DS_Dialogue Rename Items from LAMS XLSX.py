@@ -4,15 +4,31 @@
 # Version: 1.0
 # Python Version 3.9
 
-### Main Function ###
+### IMPORTANT! ###
+### This script requires REAPER to use python (Preferences>Plug-ins>ReaScript>Enable Python for use with Reascript).
+### This script uses openpyxl to read into the excel spreadsheet. To install openpyxl, use pip. (https://openpyxl.readthedocs.io/en/stable/)
+
 
 import os
 import openpyxl
+
+### User configureable variables ###
+
+# Use these variables to point to your filenames. Index starts at 1 (first row is 1, first column is 1). 
+# Preconfigured for LAMS Read Only exports, where "Unique Name" is column E.
+
+min_row = 2
+min_col = 5
+max_col = 5
+
+### End User Configureable variables ###
 
 if RPR_GetOS() == "Win32" or RPR_GetOS() == "Win64":
   sep = "\\"
 else:
   sep = "/"
+
+### Main Function ###
 
 def main():
   
@@ -55,7 +71,7 @@ def readExcel(file):
   script = xlsx["Script"]
       
   # Get the filenames and put them into tuple names
-  for name in script.iter_cols(min_row=2, min_col=7, max_col=7, values_only=True):
+  for name in script.iter_cols(min_row=min_row, min_col=min_col, max_col=max_col, values_only=True):
     names = name
   
   return names
