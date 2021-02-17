@@ -2,7 +2,7 @@
  * ReaScript Name: Adjust waveform height via mousewheel
  * Author: Dedrick Sarzaba
  * REAPER: 6.23
- * About: Changes waveform (peaks) view height via mousewheel.
+ * About: Changes waveform (peaks) view height via mousewheel, similar to how it works in PT.
 --]]
 
 
