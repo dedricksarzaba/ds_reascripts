@@ -8,18 +8,12 @@
 ### This script requires REAPER to use python (Preferences>Plug-ins>ReaScript>Enable Python for use with Reascript).
 ### This script uses openpyxl to read into the excel spreadsheet. To install openpyxl, use pip. (https://openpyxl.readthedocs.io/en/stable/)
 
-
 import os
 import openpyxl
 
 ### User configureable variables ###
 
-# Use these variables to point to your filenames. Index starts at 1 (first row is 1, first column is 1). 
-# Preconfigured for LAMS Read Only exports, where "Unique Name" is column E.
-
-min_row = 2
-min_col = 5
-max_col = 5
+column_value = "Unique Name" # Change this to the name of the column where the filenames are
 
 ### End User Configureable variables ###
 
@@ -41,22 +35,26 @@ def main():
     
     names = readExcel(file)
     
-    sel_items = RPR_CountSelectedMediaItems(0) # count the amount of selected items
+    # Check if there are actual filenames in the list
+    if len(names) > 1:
     
-    if sel_items == 0: # if no items selected, error
-      RPR_ShowMessageBox("No Items Selected", "Error!", 0) 
+      sel_items = RPR_CountSelectedMediaItems(0) # Count the amount of selected items
+      
+      if sel_items == 0: # If no items selected, error
+        RPR_ShowMessageBox("No Items Selected", "Error!", 0) 
+      
+      # Rename the items
+      for i in range(sel_items):
+        item = RPR_GetSelectedMediaItem(0, i)
+        take = RPR_GetActiveTake(item)
+        RPR_GetSetMediaItemTakeInfo_String(take, "P_NAME", names[i], 1)
     
-    
-    #rename the items
-    for i in range(sel_items):
-      item = RPR_GetSelectedMediaItem(0, i)
-      take = RPR_GetActiveTake(item)
-      RPR_GetSetMediaItemTakeInfo_String(take, "P_NAME", names[i], 1)
+    else: # If no names in the list, error
+      RPR_ShowMessageBox("Can't find 'Unique Name'", "Error!", 0)
       
     RPR_PreventUIRefresh(-1)
   
-  else:
-  
+  else: # If no excel selected, error
     RPR_ShowMessageBox("No Excel Sheet Selected", "Error!", 0)
   
 
@@ -64,19 +62,19 @@ def main():
 
 def readExcel(file):
   
-  names = ()
+  names = []
   
   # Load excel workbook and find the Script worksheet
   xlsx = openpyxl.load_workbook(file)
   script = xlsx["Script"]
       
-  # Get the filenames and put them into tuple names
-  for name in script.iter_cols(min_row=min_row, min_col=min_col, max_col=max_col, values_only=True):
-    names = name
-  
-  return names
-    
-
+  # Get the filenames
+  for col in script.iter_cols():
+    if col[0].value == column_value:
+      for cell in col:
+        names.append(cell.value)
+  return names[1:]
+ 
 ### INIT ###
 
 RPR_Undo_BeginBlock()
