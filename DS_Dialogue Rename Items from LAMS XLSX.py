@@ -36,7 +36,7 @@ def main():
     names = readExcel(file)
     
     # Check if there are actual filenames in the list
-    if len(names) > 1:
+    if len(names) >= 1:
     
       sel_items = RPR_CountSelectedMediaItems(0) # Count the amount of selected items
       
