@@ -72,7 +72,10 @@ def readExcel(file):
   for col in script.iter_cols():
     if col[0].value == column_value:
       for cell in col:
-        names.append(cell.value)
+        if cell.value == None:
+          pass
+        else:
+          names.append(cell.value)
   return names[1:]
  
 ### INIT ###
